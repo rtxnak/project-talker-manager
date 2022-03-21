@@ -3,6 +3,11 @@ const {
   readContentFile,
 } = require('../helpers/readWriteFile');
 
+const {
+  isValidEmail,
+  isValidPassword,
+} = require('../middlewares/loginValidations');
+
 const PATH_FILE = './talker.json';
 
 router.get('/talker', async (_req, res) => {
@@ -20,5 +25,13 @@ router.get('/talker/:id', async (req, res) => {
 
   res.status(200).json(talkerID);
 });
+
+router.post(
+  '/login', 
+  isValidEmail, 
+  isValidPassword, 
+  (_req, res) => res.status(200)
+  .json({ token: '7mqaVRXJSp886CGr' }),
+);
 
 module.exports = router;
