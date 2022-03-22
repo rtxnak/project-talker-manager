@@ -17,6 +17,8 @@ const {
   isValidToken,
 } = require('../middlewares/createTalkerValidation');
 
+const { generateToken } = require('../helpers/generateToken');
+
 const PATH_FILE = './talker.json';
 
 router.get('/talker', async (_req, res) => {
@@ -38,10 +40,12 @@ router.get('/talker/:id', async (req, res) => {
 router.post(
   '/login', 
   isValidEmail, 
-  isValidPassword, 
+  isValidPassword,
   (_req, res) => res.status(200)
-  .json({ token: '7mqaVRXJSp886CGr' }),
+  .json({ token: generateToken }),
 );
+
+// console.log(generateToken);
 
 router.post(
   '/talker',
