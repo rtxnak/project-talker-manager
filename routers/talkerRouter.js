@@ -12,6 +12,7 @@ const {
 const {
   isValidTalkerName,
   isValidTalkerAge,
+  isValidTalkerTalk,
   isValidTalkerTalkDate,
   isValidTalkerTalkRate,
   isValidToken,
@@ -45,13 +46,12 @@ router.post(
   .json({ token: generateToken }),
 );
 
-// console.log(generateToken);
-
 router.post(
   '/talker',
   isValidToken,
   isValidTalkerName,
   isValidTalkerAge,
+  isValidTalkerTalk,
   isValidTalkerTalkDate,
   isValidTalkerTalkRate,
   async (req, res) => {
@@ -62,6 +62,32 @@ router.post(
 
   res.status(201).json(createdTalker);
 },
+);
+
+router.put(
+  '/talker/:id',
+  isValidToken,
+  isValidTalkerName,
+  isValidTalkerAge,
+  isValidTalkerTalk,
+  isValidTalkerTalkDate,
+  isValidTalkerTalkRate,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const talkers = await readContentFile(PATH_FILE) || [];
+    const talkersIndex = talkers.findIndex((talker) => talker.id === parseInt(id, 10));
+
+    if (talkersIndex === -1) {
+      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    }
+
+    talkers[talkersIndex] = { ...talkers[talkersIndex], name, age, talk };
+
+    writeContentFile(PATH_FILE, talkers[talkersIndex]);
+
+    return res.status(200).json(talkers[talkersIndex]);
+  },
 );
 
 module.exports = router;
