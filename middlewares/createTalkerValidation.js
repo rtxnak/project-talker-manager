@@ -25,14 +25,20 @@ const isValidTalkerAge = (req, res, next) => {
   next();
 };
 
+const isValidTalkerTalk = (req, res, next) => {
+  const { talk } = req.body;
+
+  if (!talk || !talk.watchedAt || talk.rate === undefined) {
+    return res.status(400)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' }); 
+  }
+
+  next();
+};
 const isValidTalkerTalkDate = (req, res, next) => {
   const { talk } = req.body;
   const validDateRegex = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/g;
 
-  if (!talk || !talk.watchedAt || !talk.rate) {
-    return res.status(400)
-    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' }); 
-  }
   if (!talk.watchedAt.match(validDateRegex)) {
     return res.status(400)
     .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' }); 
@@ -70,6 +76,7 @@ const isValidToken = (req, res, next) => {
 module.exports = {
   isValidTalkerName,
   isValidTalkerAge,
+  isValidTalkerTalk,
   isValidTalkerTalkDate,
   isValidTalkerTalkRate,
   isValidToken,
