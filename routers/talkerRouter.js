@@ -58,7 +58,8 @@ router.post(
   const createdTalker = req.body;
   const talkers = await readContentFile(PATH_FILE) || [];
   createdTalker.id = (talkers.length + 1);
-  writeContentFile(PATH_FILE, createdTalker);
+  talkers.push(createdTalker);
+  writeContentFile(PATH_FILE, talkers);
 
   res.status(201).json(createdTalker);
 },
@@ -84,7 +85,7 @@ router.put(
 
     talkers[talkersIndex] = { ...talkers[talkersIndex], name, age, talk };
 
-    writeContentFile(PATH_FILE, talkers[talkersIndex]);
+    writeContentFile(PATH_FILE, talkers);
 
     return res.status(200).json(talkers[talkersIndex]);
   },
